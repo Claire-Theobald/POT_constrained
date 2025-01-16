@@ -328,7 +328,7 @@ def lbfgsb_unbalanced(
     # feasible without creating virtual mass
     if min_constraint:
         constraints = [{
-            "type": "ineq",
+            "type": "eq",
             "fun": lambda x: np.sum(x) - np.min([np.sum(a), np.sum(b)]),
         }]
 
