@@ -165,6 +165,7 @@ def lbfgsb_unbalanced(
     verbose=False,
     log=False,
     min_constraint=False,
+    eps=1e-8,
 ):
     r"""
     Solve the unbalanced optimal transport problem and return the OT plan using L-BFGS-B algorithm.
@@ -237,6 +238,8 @@ def lbfgsb_unbalanced(
         record log if True
     min_constraint : bool, optional
         apply constraints if True
+    eps : float, optional
+        tolerance for the constraint
     Returns
     -------
     gamma : (dim_a, dim_b) array-like
@@ -328,8 +331,8 @@ def lbfgsb_unbalanced(
     # feasible without creating virtual mass
     if min_constraint:
         constraints = [{
-            "type": "eq",
-            "fun": lambda x: np.sum(x) - np.min([np.sum(a), np.sum(b)]),
+            "type": "ineq",
+            "fun": lambda x: eps - np.sum(x) + np.min([np.sum(a), np.sum(b)]),
         }]
 
     res = minimize(
